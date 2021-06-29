@@ -1,18 +1,36 @@
-const express = require('express') // require the express package
-const app = express() // initialize your express app instance
+const express = require('express') ;
+const app = express() ;
 const cors = require('cors');
 require('dotenv').config();
-const weatherData = require('./data/weather.json'); 
+const weather = require('./data/weather.json'); 
+app.use(cors()) ;
+ 
 
-app.use(cors()) // after you initialize your express app instance
- 
-// a server endpoint 
-app.get('/', // our endpoint name
- function (req, res) { // callback function of what we should do with our request
-  res.send('Hello World') // our endpoint function response
-})
+app.get('/', (req, res)=> { res.send('Hello World') }); 
+
 app.get('/weather', (req, res)=>{
-  res.json(weatherData)
-})
+  let lat= req.query.lat; 
+  let lon= req.query.lon; 
+  let searchQuery= req.query.searchQuery; 
+  
+  let findData=()=>{
+    let city=weather.find((city,idx)=>{
+      return city.city_name.toLowerCase() === searchQuery.toLowerCase()
+    })
+    return city.date.map(item=>{
+      return new ForeCast(item)
+    })
+  }
+  res.json( findData() );
+});
  
-app.listen(8000) // kick start the express server to work
+class ForeCast{
+  constructor(weatherData){
+  this.date= weatherData.valid_date
+  this.description= weatherData.weather.description
+  
+
+  }
+
+}
+app.listen(process.env.PORT) ;

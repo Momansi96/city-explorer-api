@@ -22,7 +22,7 @@ if (lat&&lon){
     res.send(arrOfData)
   }else{ 
   
-    const weatherUrl = `https://api.weatherbit.io/v2.0/forecast/daily?key=${WEATHER_API_KEY}&lat=${lat}&lon=${lon}`;
+const weatherUrl = `https://api.weatherbit.io/v2.0/forecast/daily?key=${WEATHER_API_KEY}&lat=${lat}&lon=${lon}`;
     
     
 superagent.get(weatherUrl).then(weatherData => {
@@ -35,12 +35,8 @@ console.log('data come from api');
   }).catch(error=>res.send( error));
 
   }
-}
-   
-  
+}  
 };
-
-
 class Weather{
     constructor(weth){
       this.description=weth.weather.description,

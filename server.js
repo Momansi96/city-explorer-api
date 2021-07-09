@@ -1,38 +1,22 @@
-const express = require('express') ;
-const app = express() ;
-const cors = require('cors');
-require('dotenv').config();
-const weather = require('./data/weather.json'); 
-app.use(cors()) ;
- 
+const express = require('express')
+const app = express()
+const weatherInformation=require('./components/weather');
+const movieInformation=require('./components/movies');
+require('dotenv').config()
 
-app.get('/', (req, res)=> { res.send('Hello World') }); 
+const PORT=process.env.PORT||8000;
+const cors = require('cors')
+app.use(cors());
 
-app.get('/weather', (req, res)=>{
-  let lat= req.query.lat; 
-  let lon= req.query.lon; 
-  let searchQuery= req.query.searchQuery; 
+  app.get('/weather',weatherInformation);
 
-  try{
-    let findData=()=>{
-      let city = weather.find((city,idx)=>{
-        return city.city_name.toLowerCase() === searchQuery.toLowerCase() && city.lat === Number(lat) && city.lon === Number(lon)
-      })
-      return city.data.map(item=>{
-        return new ForeCast(item)
-      }) 
-    }
-    res.json( findData() );
-  
-  }catch(error){
-    res.status(500).send('something went wrong')
-  }
-  
+app.get('/movie', movieInformation);
+
+app.get('/', function (req, res) {
+  res.send(' Hello from The Back-End ! ❤️')
 });
-class ForeCast{
-  constructor(weatherData){
-  this.date= weatherData.valid_date
-  this.description= weatherData.weather.description
-   }
-}
-app.listen(process.env.PORT) ;
+
+
+app.listen(PORT,()=>{
+  console.log(`server started at ${PORT}`);
+});
